@@ -1,6 +1,6 @@
-name: 'Jest coverage report'
+name: 'Otanikotani - Jest coverage report'
 description: 'Track your code coverage in each pull request.'
-author: 'Artiom Tretjakovas <artiom.tretjakovas2@gmail.com>'
+author: 'Otanikotani <otanikotani@gmail.com>'
 branding:
     icon: 'activity'
     color: 'gray-dark'
