@@ -1,6 +1,11 @@
 import { run } from './run';
 
-run().catch((error) => {
-    console.error('Error:', error);
-    process.exit(1);
-});
+run()
+    .then(() => {
+        console.log('Done!');
+        process.exit(0);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        process.exit(1);
+    });

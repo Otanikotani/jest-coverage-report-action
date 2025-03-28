@@ -195,6 +195,8 @@ export const run = async (
         }
     });
 
+    console.log('Done!');
+
     if (dataCollector.get().errors.length > 0) {
         setFailed(i18n('failed'));
     }
