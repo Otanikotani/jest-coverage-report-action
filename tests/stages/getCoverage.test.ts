@@ -35,139 +35,6 @@ const clearMocks = () => {
 beforeEach(clearMocks);
 
 describe('getCoverage', () => {
-    it('should run all steps', async () => {
-        const dataCollector = createDataCollector<JsonReport>();
-
-        (readFile as jest.Mock<any, any>).mockImplementationOnce(() => '{}');
-
-        const jsonReport = await getCoverage(
-            dataCollector,
-            defaultOptions,
-            false,
-            undefined
-        );
-
-        expect(removeDirectory).toBeCalledWith('node_modules');
-        expect(exec).toBeCalledWith('npm install', undefined, {
-            cwd: undefined,
-        });
-        expect(
-            exec
-        ).toBeCalledWith(
-            'default script --ci --json --coverage --testLocationInResults --outputFile="report.json"',
-            [],
-            { cwd: undefined }
-        );
-        expect(readFile).toHaveBeenCalledWith('report.json');
-
-        expect(jsonReport).toStrictEqual({});
-    });
-
-    it('should pass working-directory', async () => {
-        const dataCollector = createDataCollector<JsonReport>();
-
-        (readFile as jest.Mock<any, any>).mockImplementationOnce(() => '{}');
-
-        const jsonReport = await getCoverage(
-            dataCollector,
-            { ...defaultOptions, workingDirectory: 'testDir' },
-            false,
-            undefined
-        );
-
-        expect(removeDirectory).toBeCalledWith(`testDir${sep}node_modules`);
-        expect(exec).toBeCalledWith('npm install', undefined, {
-            cwd: 'testDir',
-        });
-        expect(
-            exec
-        ).toBeCalledWith(
-            'default script --ci --json --coverage --testLocationInResults --outputFile="report.json"',
-            [],
-            { cwd: 'testDir' }
-        );
-        expect(readFile).toHaveBeenCalledWith(`testDir${sep}report.json`);
-
-        expect(jsonReport).toStrictEqual({});
-    });
-
-    it('should pass package-manager', async () => {
-        const dataCollector = createDataCollector<JsonReport>();
-
-        (readFile as jest.Mock<any, any>).mockImplementationOnce(() => '{}');
-
-        const jsonReportYarn = await getCoverage(
-            dataCollector,
-            { ...defaultOptions, packageManager: 'yarn' },
-            false,
-            undefined
-        );
-
-        expect(exec).toBeCalledWith('yarn install', undefined, {
-            cwd: undefined,
-        });
-
-        expect(jsonReportYarn).toStrictEqual({});
-
-        (readFile as jest.Mock<any, any>).mockImplementationOnce(() => '{}');
-
-        const jsonReportPnpm = await getCoverage(
-            dataCollector,
-            { ...defaultOptions, packageManager: 'pnpm' },
-            false,
-            undefined
-        );
-
-        expect(exec).toBeCalledWith('pnpm install', undefined, {
-            cwd: undefined,
-        });
-
-        expect(jsonReportPnpm).toStrictEqual({});
-
-        (readFile as jest.Mock<any, any>).mockImplementationOnce(() => '{}');
-
-        const jsonReportBun = await getCoverage(
-            dataCollector,
-            { ...defaultOptions, packageManager: 'bun' },
-            false,
-            undefined
-        );
-
-        expect(exec).toBeCalledWith('bun install', undefined, {
-            cwd: undefined,
-        });
-
-        expect(jsonReportBun).toStrictEqual({});
-    });
-
-    it('should skip installation step', async () => {
-        const dataCollector = createDataCollector<JsonReport>();
-
-        (readFile as jest.Mock<any, any>).mockImplementationOnce(() => '{}');
-
-        const jsonReport = await getCoverage(
-            dataCollector,
-            { ...defaultOptions, skipStep: 'install' },
-            false,
-            undefined
-        );
-
-        expect(removeDirectory).not.toBeCalledWith('node_modules');
-        expect(exec).not.toBeCalledWith('npm install', undefined, {
-            cwd: undefined,
-        });
-        expect(
-            exec
-        ).toBeCalledWith(
-            'default script --ci --json --coverage --testLocationInResults --outputFile="report.json"',
-            [],
-            { cwd: undefined }
-        );
-        expect(readFile).toHaveBeenCalledWith('report.json');
-
-        expect(jsonReport).toStrictEqual({});
-    });
-
     it('should skip all steps', async () => {
         const dataCollector = createDataCollector<JsonReport>();
 
@@ -176,7 +43,6 @@ describe('getCoverage', () => {
         const jsonReport = await getCoverage(
             dataCollector,
             { ...defaultOptions, skipStep: 'all' },
-            false,
             undefined
         );
 
@@ -185,126 +51,6 @@ describe('getCoverage', () => {
             cwd: undefined,
         });
         expect(exec).not.toBeCalledWith(
-            'default script --ci --json --coverage --testLocationInResults --outputFile="report.json"',
-            [],
-            {
-                cwd: undefined,
-            }
-        );
-        expect(readFile).toHaveBeenCalledWith('report.json');
-
-        expect(jsonReport).toStrictEqual({});
-    });
-
-    it('should run all steps, ignoring skip-step option', async () => {
-        const dataCollector = createDataCollector<JsonReport>();
-
-        (readFile as jest.Mock<any, any>).mockImplementationOnce(() => '{}');
-
-        const jsonReport = await getCoverage(
-            dataCollector,
-            { ...defaultOptions, skipStep: 'all' },
-            true,
-            undefined
-        );
-
-        expect(removeDirectory).toBeCalledWith('node_modules');
-        expect(exec).toBeCalledWith('npm install', undefined, {
-            cwd: undefined,
-        });
-        expect(exec).toBeCalledWith(
-            'default script --ci --json --coverage --testLocationInResults --outputFile="report.json"',
-            [],
-            {
-                cwd: undefined,
-            }
-        );
-        expect(readFile).toHaveBeenCalledWith('report.json');
-
-        expect(jsonReport).toStrictEqual({});
-    });
-
-    it('should run all steps, ignoring skip-step option', async () => {
-        const dataCollector = createDataCollector<JsonReport>();
-
-        (readFile as jest.Mock<any, any>).mockImplementationOnce(() => '{}');
-
-        const jsonReport = await getCoverage(
-            dataCollector,
-            { ...defaultOptions, skipStep: 'all' },
-            true,
-            undefined
-        );
-
-        expect(removeDirectory).toBeCalledWith('node_modules');
-        expect(exec).toBeCalledWith('npm install', undefined, {
-            cwd: undefined,
-        });
-        expect(exec).toBeCalledWith(
-            'default script --ci --json --coverage --testLocationInResults --outputFile="report.json"',
-            [],
-            {
-                cwd: undefined,
-            }
-        );
-        expect(readFile).toHaveBeenCalledWith('report.json');
-
-        expect(jsonReport).toStrictEqual({});
-    });
-
-    it('should ignore failing install stage', async () => {
-        const dataCollector = createDataCollector<JsonReport>();
-
-        (readFile as jest.Mock<any, any>).mockImplementationOnce(() => '{}');
-        (exec as jest.Mock<any, any>).mockImplementationOnce(() => {
-            throw new Error('not installed');
-        });
-
-        const jsonReport = await getCoverage(
-            dataCollector,
-            { ...defaultOptions, skipStep: 'all' },
-            true,
-            undefined
-        );
-
-        expect(removeDirectory).toBeCalledWith('node_modules');
-        expect(exec).toBeCalledWith('npm install', undefined, {
-            cwd: undefined,
-        });
-        expect(exec).toBeCalledWith(
-            'default script --ci --json --coverage --testLocationInResults --outputFile="report.json"',
-            [],
-            {
-                cwd: undefined,
-            }
-        );
-        expect(readFile).toHaveBeenCalledWith('report.json');
-
-        expect(jsonReport).toStrictEqual({});
-    });
-
-    it('should ignore failing test stage', async () => {
-        const dataCollector = createDataCollector<JsonReport>();
-
-        (readFile as jest.Mock<any, any>).mockImplementationOnce(() => '{}');
-        (exec as jest.Mock<any, any>).mockImplementation((command: string) => {
-            if (command.startsWith('default script')) {
-                throw new Error('tests failed');
-            }
-        });
-
-        const jsonReport = await getCoverage(
-            dataCollector,
-            { ...defaultOptions, skipStep: 'all' },
-            true,
-            undefined
-        );
-
-        expect(removeDirectory).toBeCalledWith('node_modules');
-        expect(exec).toBeCalledWith('npm install', undefined, {
-            cwd: undefined,
-        });
-        expect(exec).toBeCalledWith(
             'default script --ci --json --coverage --testLocationInResults --outputFile="report.json"',
             [],
             {
@@ -327,7 +73,6 @@ describe('getCoverage', () => {
             getCoverage(
                 dataCollector,
                 { ...defaultOptions, skipStep: 'all' },
-                true,
                 undefined
             )
         ).rejects.toBeDefined();
@@ -341,7 +86,6 @@ describe('getCoverage', () => {
         const jsonReport = await getCoverage(
             dataCollector,
             defaultOptions,
-            false,
             'custom filepath'
         );
 
@@ -361,7 +105,7 @@ describe('getCoverage', () => {
         });
 
         await expect(
-            getCoverage(dataCollector, defaultOptions, false, 'custom filepath')
+            getCoverage(dataCollector, defaultOptions, 'custom filepath')
         ).rejects.toStrictEqual(
             new ActionError(FailReason.FAILED_GETTING_COVERAGE)
         );

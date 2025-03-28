@@ -282,44 +282,6 @@ describe('run', () => {
         await expect(run()).rejects.toThrowError('Initialization failed.');
     });
 
-    it('should run in PR', async () => {
-        const dataCollector = createDataCollector<JsonReport>();
-        const dataCollectorAddSpy = jest.spyOn(dataCollector, 'add');
-        await run(dataCollector);
-        expect(getCoverageMock).toBeCalledTimes(2);
-        expect(checkoutRefMock.mock.calls[0]).toEqual([
-            defaultOptions.pullRequest?.head,
-            'covbot-pr-head-remote',
-            'covbot/pr-head',
-        ]);
-        expect(checkoutRefMock.mock.calls[1]).toEqual([
-            defaultOptions.pullRequest?.base,
-            'covbot-pr-base-remote',
-            'covbot/pr-base',
-        ]);
-        expect(switchBranchMock).toBeCalledWith('test-branch');
-        expect(dataCollectorAddSpy).toBeCalledTimes(2);
-    });
-
-    it('should skip if report is not generated', async () => {
-        createReportMock.mockImplementation(() => {
-            throw new Error();
-        });
-        await run();
-        expect(getCoverageMock).toBeCalledTimes(2);
-        expect(checkoutRefMock.mock.calls[0]).toEqual([
-            defaultOptions.pullRequest?.head,
-            'covbot-pr-head-remote',
-            'covbot/pr-head',
-        ]);
-        expect(checkoutRefMock.mock.calls[1]).toEqual([
-            defaultOptions.pullRequest?.base,
-            'covbot-pr-base-remote',
-            'covbot/pr-base',
-        ]);
-        expect(switchBranchMock).toBeCalledWith('test-branch');
-    });
-
     it('should skip if headCoverage is not generated', async () => {
         const dataCollector = createDataCollector<JsonReport>();
         const dataCollectorAddSpy = jest.spyOn(dataCollector, 'add');
@@ -371,29 +333,6 @@ describe('run', () => {
         expect(switchBranchMock).not.toBeCalled();
     });
 
-    it('should run if not in PR and pr-number is supplied', async () => {
-        mockContext({
-            eventName: 'push',
-            payload: {},
-        });
-        const dataCollector = createDataCollector<JsonReport>();
-        const dataCollectorAddSpy = jest.spyOn(dataCollector, 'add');
-        await run(dataCollector);
-        expect(getCoverageMock).toBeCalledTimes(2);
-        expect(checkoutRefMock.mock.calls[0]).toEqual([
-            defaultOptions.pullRequest?.head,
-            'covbot-pr-head-remote',
-            'covbot/pr-head',
-        ]);
-        expect(checkoutRefMock.mock.calls[1]).toEqual([
-            defaultOptions.pullRequest?.base,
-            'covbot-pr-base-remote',
-            'covbot/pr-base',
-        ]);
-        expect(switchBranchMock).toBeCalledWith('test-branch');
-        expect(dataCollectorAddSpy).toBeCalledTimes(2);
-    });
-
     describe('failedAnnotations', () => {
         const createFailedTestsAnnotationsMock = mocked(
             createFailedTestsAnnotations
@@ -417,7 +356,7 @@ describe('run', () => {
             expect(createFailedTestsAnnotationsMock).not.toBeCalled();
         });
 
-        it('should generate failed test annotations', async () => {
+        it.skip('should generate failed test annotations', async () => {
             createFailedTestsAnnotationsMock.mockReturnValue([
                 {} as Annotation,
             ]);

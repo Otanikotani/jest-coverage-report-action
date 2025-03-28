@@ -15,7 +15,7 @@
         "lint": "eslint ."
     },
     "keywords": [],
-    "author": "Artiom Tretjakovas <artiom.tretjakovas2@gmail.com>",
+    "author": "Otanikotani",
     "license": "MIT",
     "dependencies": {
         "@actions/core": "^1.10.0",

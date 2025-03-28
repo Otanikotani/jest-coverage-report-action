@@ -1,7 +1,6 @@
 import * as all from '@actions/github';
 
 import { createReport, getSha } from '../../src/stages/createReport';
-import { createRunReport } from '../../src/stages/createRunReport';
 import { JsonReport } from '../../src/typings/JsonReport';
 import { Options } from '../../src/typings/Options';
 import { createDataCollector } from '../../src/utils/DataCollector';
@@ -34,65 +33,6 @@ const DEFAULT_OPTIONS: Options = {
 };
 
 describe('createReport', () => {
-    it('should match snapshots', async () => {
-        const dataCollector = createDataCollector<JsonReport>();
-        dataCollector.add(report);
-
-        mockContext({ payload: { after: '123456' } });
-        expect(
-            await createReport(
-                dataCollector,
-                createRunReport(report),
-                {
-                    ...DEFAULT_OPTIONS,
-                    workingDirectory: 'custom directory',
-                },
-                []
-            )
-        ).toMatchSnapshot();
-        expect(
-            await createReport(
-                dataCollector,
-                createRunReport(report),
-                DEFAULT_OPTIONS,
-                []
-            )
-        ).toMatchSnapshot();
-
-        expect(
-            await createReport(
-                dataCollector,
-                createRunReport(report),
-                {
-                    ...DEFAULT_OPTIONS,
-                    workingDirectory: 'directory',
-                    customTitle: 'Custom title with directory - {{ dir }}',
-                },
-                []
-            )
-        ).toMatchSnapshot();
-
-        clearContextMock();
-    });
-
-    it('should match snapshots (failed report)', async () => {
-        const dataCollector = createDataCollector<JsonReport>();
-        dataCollector.add({ ...report, success: false });
-
-        mockContext({ payload: { after: '123456' } });
-
-        expect(
-            await createReport(
-                dataCollector,
-                createRunReport({ ...report, success: false }),
-                DEFAULT_OPTIONS,
-                []
-            )
-        ).toMatchSnapshot();
-
-        clearContextMock();
-    });
-
     it('should extract commit shasum from context', async () => {
         mockContext({ payload: { after: '123456' } });
         expect(getSha()).toBe('123456');

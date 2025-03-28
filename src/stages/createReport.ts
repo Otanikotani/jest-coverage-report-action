@@ -4,11 +4,10 @@ import { getReportTag } from '../constants/getReportTag';
 import { GITHUB_MESSAGE_SIZE_LIMIT } from '../constants/GITHUB_MESSAGE_SIZE_LIMIT';
 import { formatCoverage } from '../format/formatCoverage';
 import { formatErrors } from '../format/formatErrors';
-import { formatRunReport } from '../format/formatRunReport';
 import template from '../format/template.md';
 import { JsonReport } from '../typings/JsonReport';
 import { Options } from '../typings/Options';
-import { SummaryReport, TestRunReport } from '../typings/Report';
+import { SummaryReport } from '../typings/Report';
 import { ThresholdResult } from '../typings/ThresholdResult';
 import { DataCollector } from '../utils/DataCollector';
 import { i18n } from '../utils/i18n';
@@ -21,7 +20,6 @@ export const getSha = () =>
 
 export const createReport = (
     dataCollector: DataCollector<JsonReport>,
-    runReport: TestRunReport | undefined,
     options: Options,
     thresholdResults: ThresholdResult[]
 ): SummaryReport => {
@@ -38,7 +36,7 @@ export const createReport = (
     );
 
     const coverage = formatCoverage(headReport, baseReport, undefined, false);
-    const formattedReport = runReport ? formatRunReport(runReport) : '';
+    const formattedReport = '';
 
     let templateText = insertArgs(template, {
         body: [formattedErrors, coverage, formattedReport].join('\n'),
