@@ -78,6 +78,8 @@ export const run = async (
         dataCollector.add(headCoverage);
     }
 
+    console.log('Coverages done!');
+
     const [, thresholdResults] = await runStage(
         'checkThreshold',
         dataCollector,
